@@ -5,6 +5,6 @@ debezium unwrap-smt testing and check for each db connector this repo is collect
 ## Table of Contents
 
 * [JDBC Sink](#jdbc-sink)
-    * [MySQL to PostgreSQL](MySQL_PostgreSQL.md)
+    * [MySQL to PostgreSQL](MySQL_PostgreSQL/MySQL_PostgreSQL.md)
 
 
