@@ -60,7 +60,7 @@ How to run:
 
 ```shell
 # Start the application
-export DEBEZIUM_VERSION=2.1
+export DEBEZIUM_VERSION=2.5
 docker compose -f docker-compose-jdbc.yaml up --build
 
 # Start PostgreSQL connector
