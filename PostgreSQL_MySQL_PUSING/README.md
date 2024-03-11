@@ -1,6 +1,6 @@
-# MySQL to PostgreSQL 
+# PostgreSQL to MySQL
 
-data flow with MySQL as source connector and PostgreSQL as sink connector examples.
+data flow with PostgreSQL as source connector and MySQL as sink connector examples.
 
 ## Table of Contents
 
@@ -18,11 +18,11 @@ data flow with MySQL as source connector and PostgreSQL as sink connector exampl
 
 
 ```
-                   +-------------+
-                   |             |
-                   |    MySQL    |
-                   |             |
-                   +------+------+
+                +-----------------+
+                |                 |
+                |    PostgreSQL   |
+                |                 |
+                +---------+-------+
                           |
                           |
                           |
@@ -38,19 +38,19 @@ data flow with MySQL as source connector and PostgreSQL as sink connector exampl
                           |
                   +-------v--------+
                   |                |
-                  |   PostgreSQL   |
+                  |      MySQL     |
                   |                |
                   +----------------+
 
 
 ```
 We are using Docker Compose to deploy following components
-* MySQL
+* PostgreSQL
 * Kafka
   * ZooKeeper
   * Kafka Broker
   * Kafka Connect with [Debezium](https://debezium.io/) and  [JDBC](https://github.com/confluentinc/kafka-connect-jdbc) Connectors
-* PostgreSQL
+* MySQL
 
 ### Usage
 
@@ -61,22 +61,35 @@ How to run:
 ```shell
 # Start the application
 export DEBEZIUM_VERSION=2.5
-docker compose -f docker-compose-jdbc.yaml up --build
+docker compose -f compose.yaml up --build
 
-# Start MySQL source connector
+# Start PostgreSQL connector
 curl -i -X POST -H "Accept:application/json" -H  "Content-Type:application/json" http://localhost:8083/connectors/ -d @source.json
 
-# Start PostgreSQL sink connector
-curl -i -X POST -H "Accept:application/json" -H  "Content-Type:application/json" http://localhost:8083/connectors/ -d @jdbc-sink.json
+# Start MySQL Sink connector
+curl -i -X POST -H "Accept:application/json" -H  "Content-Type:application/json" http://localhost:8083/connectors/ -d @target.json
 
 ```
 
 #### Testing
 
-Check contents of the MySQL database:
+Check contents of the PostgreSQL database:
 
 ```shell
-docker compose -f docker-compose-jdbc.yaml exec mysql bash -c 'mysql -u $MYSQL_USER  -p$MYSQL_PASSWORD inventory -e "select * from customers"'
+docker compose -f compose.yaml exec postgres bash -c 'psql -U $POSTGRES_USER $POSTGRES_DB -c "select * from inventory.customers"'
+ last_name |  id  | first_name |         email         
+-----------+------+------------+-----------------------
+ Thomas    | 1001 | Sally      | sally.thomas@acme.com
+ Bailey    | 1002 | George     | gbailey@foobar.com
+ Walker    | 1003 | Edward     | ed@walker.com
+ Kretchmar | 1004 | Anne       | annek@noanswer.org
+(4 rows)
+```
+
+Verify that the MySQL database has the same content:
+
+```shell
+docker compose -f compose.yaml exec mysql bash -c 'mysql -u $MYSQL_USER  -p$MYSQL_PASSWORD inventory -e "select * from customers"'
 +------+------------+-----------+-----------------------+
 | id   | first_name | last_name | email                 |
 +------+------------+-----------+-----------------------+
@@ -87,32 +100,20 @@ docker compose -f docker-compose-jdbc.yaml exec mysql bash -c 'mysql -u $MYSQL_U
 +------+------------+-----------+-----------------------+
 ```
 
-Verify that the PostgreSQL database has the same content:
-
-```shell
-docker compose -f docker-compose-jdbc.yaml exec postgres bash -c 'psql -U $POSTGRES_USER $POSTGRES_DB -c "select * from customers"'
- last_name |  id  | first_name |         email         
------------+------+------------+-----------------------
- Thomas    | 1001 | Sally      | sally.thomas@acme.com
- Bailey    | 1002 | George     | gbailey@foobar.com
- Walker    | 1003 | Edward     | ed@walker.com
- Kretchmar | 1004 | Anne       | annek@noanswer.org
-(4 rows)
-```
 
 ##### New record
 
-Insert a new record into MySQL;
+Insert a new record into PostgreSQL;
 ```shell
-docker compose -f docker-compose-jdbc.yaml exec mysql bash -c 'mysql -u $MYSQL_USER  -p$MYSQL_PASSWORD inventory'
-mysql> insert into customers values(default, 'John', 'Doe', 'john.doe@example.com');
-Query OK, 1 row affected (0.02 sec)
+docker compose -f compose.yaml exec postgres bash -c 'psql -U $POSTGRES_USER $POSTGRES_DB'
+inventory# insert into inventory.customers values(default, 'John', 'Doe', 'john.doe@example.com');
+INSERT 0 1
 ```
 
-Verify that PostgreSQL contains the new record:
+Verify that MySQL contains the new record:
 
 ```shell
-docker compose -f docker-compose-jdbc.yaml exec postgres bash -c 'psql -U $POSTGRES_USER $POSTGRES_DB -c "select * from customers"'
+docker compose -f compose.yaml exec mysql bash -c 'mysql -u $MYSQL_USER  -p$MYSQL_PASSWORD inventory -e "select * from customers"'
  last_name |  id  | first_name |         email         
 -----------+------+------------+-----------------------
 ...

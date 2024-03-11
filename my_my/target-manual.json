@@ -1,0 +1,23 @@
+{
+    "name": "mypg_target",
+    "config": {
+        "connector.class": "io.debezium.connector.jdbc.JdbcSinkConnector",
+        "tasks.max": "1",
+        "database.driver": "org.postgresql.Driver",
+        "connection.url": "jdbc:postgresql://target-db:5432/postgres",
+        "connection.username": "postgres",
+        "connection.password": "postgres",
+        "auto.create": "true",
+        "insert.mode": "upsert",
+        "delete.enabled": "true",
+        "primary.key.fields": "id",
+        "primary.key.mode": "record_key",
+        "transforms": "unwrap",
+        "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+        "transforms.unwrap.drop.tombstones": "false", 
+        "transforms.unwrap.delete.handling.mode": "rewrite",
+        "schema.evolution": "basic",
+        "topics": "mypg_customers",
+        "table.name.format": "inventory.customers",
+    }
+}

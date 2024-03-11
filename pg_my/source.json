@@ -1,0 +1,20 @@
+{
+    "name": "XXXXX",
+    "config": {
+        "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+        "tasks.max": "1",
+        "database.hostname": "XXXXX",
+        "database.port": "XXXXX",
+        "database.user": "XXXXX",
+        "database.password": "XXXXX",
+        "database.dbname" : "postgres",
+        "topic.prefix": "XXXXX",
+        "table.include.list": "XXXXX",
+        "transforms": "route",
+        "transforms.route.type": "org.apache.kafka.connect.transforms.RegexRouter",
+        "transforms.route.regex": "([^.]+)\\.([^.]+)\\.([^.]+)",
+        "transforms.route.replacement": "XXXXX_$3",
+        "schema.history.internal.kafka.bootstrap.servers": "kafka:9092",
+        "schema.history.internal.kafka.topic": "schema-changes.inventory"
+    }
+}

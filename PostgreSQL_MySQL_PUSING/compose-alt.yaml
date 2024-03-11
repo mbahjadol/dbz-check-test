@@ -1,0 +1,88 @@
+version: '3'
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    networks:
+      - my-custom-network 
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://kafka:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:SASL_PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true' 
+      KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
+      KAFKA_SASL_ENABLED_MECHANISMS: PLAIN, OAUTHBEARER
+      #KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.SimpleAclAuthorizer
+      KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
+      #KAFKA_AUTHORIZER_CLASS_NAME: io.confluent.kafka.security.authorizer.ConfluentServerAuthorizer
+    networks:
+      - my-custom-network 
+    volumes:
+        # - ./kafka.server.properties:/opt/kafka/config/server.properties
+        - ./my-acl-override.properties:/etc/kafka/server.properties 
+    healthcheck:
+      test: ["CMD", "kafka-topics", "--bootstrap-server", "kafka:9092", "--list"]
+      interval: 10s
+      timeout: 5s
+      retries: 5 
+
+  postgres:
+    image: postgres:10
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgresdb
+      POSTGRES_HOST_AUTH_METHOD: trust # Change depending on your security setup
+    ports:
+      - 5432:5432
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: mysqldb
+    ports:
+      - 3306:3306
+
+  kafka-connect:
+    image: confluentinc/cp-kafka-connect:7.6.0
+    depends_on:
+      - zookeeper
+      - kafka
+    environment:
+      CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect  # For internal Docker network access
+      CONNECT_BOOTSTRAP_SERVERS: kafka:9092
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: compose-connect-group
+      CONNECT_CONFIG_STORAGE_TOPIC: docker-connect-configs
+      CONNECT_OFFSET_STORAGE_TOPIC: docker-connect-offsets
+      CONNECT_STATUS_STORAGE_TOPIC: docker-connect-status
+      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      CONNECT_INTERNAL_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      CONNECT_INTERNAL_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter 
+      CONNECT_PLUGIN_PATH: '/usr/share/java,/usr/share/confluent-hub-components'
+    command: sh -c "until kafka-acls --bootstrap-server kafka:9092 --list 2>/dev/null; do sleep 5; done; kafka-acls --bootstrap-server kafka:9092 --add --allow-principal User:kafka-connect-user --operation Create --topic '*'" 
+    # command: sh -c "sleep 60 && kafka-acls --bootstrap-server kafka:9092 --add --allow-principal User:kafka-connect-user --operation Create --topic '*'" 
+    # command: sleep infinity 
+    ports:
+      - 8083:8083
+    volumes:
+      - ./pg-source-config.json:/etc/kafka-connect/pg-source-config.json
+      - ./mysql-sink-config.json:/etc/kafka-connect/mysql-sink-config.json
+      # Add volumes to mount Debezium connector JAR files
+    networks:
+      - my-custom-network 
+
+networks: 
+  my-custom-network:
+    driver: bridge
