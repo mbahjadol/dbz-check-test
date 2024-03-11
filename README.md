@@ -4,7 +4,10 @@ debezium unwrap-smt testing and check for each db connector this repo is collect
 
 ## Table of Contents
 
-* [JDBC Sink](#jdbc-sink)
-    * [MySQL to PostgreSQL](MySQL_PostgreSQL/MySQL_PostgreSQL.md)
+* [Debezium Synchronize](#jdbc-sink)
+    * [MySQL to PostgreSQL](my_pg/README.md)
+    * [MySQL to MySQL](my_my/README.md)
+    * [PostgreSQL to MySQL](pg_my/README.md)
+    * [PostgreSQL to PostgreSQL](pg_pg/README.md)
 
 
