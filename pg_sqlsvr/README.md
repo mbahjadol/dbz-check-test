@@ -1,6 +1,6 @@
-# SQLServer to PostgreSQL
+# PostgreSQL to SQLServer
 
-data flow with SQLServer as source connector and MySQL as sink connector examples.
+data flow with MySQL as source connector and PostgreSQL as sink connector examples.
 
 [<< Back to dbz-check-test Root](../README.md)
 
@@ -19,7 +19,7 @@ data flow with SQLServer as source connector and MySQL as sink connector example
 ```
                 +-----------------+
                 |                 |
-                |    SQLServer    |
+                |   PostgreSQL    |
                 |                 |
                 +---------+-------+
                           |
@@ -37,19 +37,19 @@ data flow with SQLServer as source connector and MySQL as sink connector example
                           |
                   +-------v--------+
                   |                |
-                  |   PostgreSQL   |
+                  |    SQLServer   |
                   |                |
                   +----------------+
 
 
 ```
 We are using Docker Compose to deploy following components
-* SQLServer
+* PostgreSQL
 * Kafka
   * ZooKeeper
   * Kafka Broker
   * Kafka Connect with [Debezium](https://debezium.io/) and  [JDBC](https://debezium.io/documentation/reference/stable/connectors/jdbc.html) Connectors
-* PostgreSQL
+* SQLServer
 
 ### Usage
 All of the environment setting is stored at env.sh, you can look at there.
@@ -60,7 +60,7 @@ All processed is almost automatically from creating container setup the connecto
 How to run:
 
 ```shell
-cd sqlsvr_pg
+cd pg_sqlsvr
 
 # Starting up
 ./start.sh
