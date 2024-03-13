@@ -1,0 +1,23 @@
+{
+    "name": "XXXXX",
+    "config": {
+        "connector.class": "io.debezium.connector.jdbc.JdbcSinkConnector",
+        "tasks.max": "1",
+        "connection.url": "XXXXX",
+        "connection.username": "XXXXX",
+        "connection.password": "XXXXX",
+        "database.encrypt": "false" ,
+        "auto.create": "true",
+        "insert.mode": "upsert",
+        "delete.enabled": "true",
+        "primary.key.fields": "id",
+        "primary.key.mode": "record_key",
+        "schema.evolution": "basic",
+        "topics": "XXXXX",
+        "topic.prefix": "XXXXX",
+        "transforms": "removePrefix",
+        "transforms.removePrefix.type": "org.apache.kafka.connect.transforms.RegexRouter",
+        "transforms.removePrefix.regex": "XXXXX_(.*)",  
+        "transforms.removePrefix.replacement": "$1" 
+    }
+}

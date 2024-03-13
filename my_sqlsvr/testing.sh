@@ -24,9 +24,8 @@ docker compose -f ${DC_FILE} exec -e MYSQL_PWD=${SOURCE_PASSWORD} ${SOURCE_NAME}
 press_enter
 
 echo "Verify the new inserted customer on the ${bold}target database$: ${green}${TARGET_TYPE}.inventory.customers ${reset}:"
-docker compose -f ${DC_FILE} exec -u ${TARGET_USER} ${TARGET_NAME} \
-    psql -c \
-	"select * from inventory.customers where id=1005;"
+docker compose -f ${DC_FILE} exec -T -i ${TARGET_NAME} bash -c \
+    "/opt/mssql-tools/bin/sqlcmd -U $TARGET_USER -P $TARGET_PASSWORD -d $SYNC_DATABASE_TARGET -Q 'select * from $SYNC_SCHEMA_TARGET.customers where id=1005;'"
 echo "${bold}${red}WARNING:${reset} ${red}You should manually verify the new inserted customer on both of source and target database.${reset}"
 press_enter
 echo "---------------------------------------------"
@@ -37,7 +36,6 @@ echo "${bold}Modifying the email of the customer with id='1005' in the source da
 echo "Updating the email of the customer with id='1005' to first_name='mbah', last_name='jadol', and email='mbah.jadol@example.com'"
 echo "${bold}${blue}into the 'inventory.customers' table of the source ${SOURCE_TYPE} database.${reset}"
 echo "---------------------------------------------"
-
 docker compose -f ${DC_FILE} exec -e MYSQL_PWD=${SOURCE_PASSWORD} ${SOURCE_NAME} \
     mysql -u${SOURCE_USER} -e \
 	"update inventory.customers set first_name='mbah', last_name='jadol',   \
@@ -50,9 +48,8 @@ docker compose -f ${DC_FILE} exec -e MYSQL_PWD=${SOURCE_PASSWORD} ${SOURCE_NAME}
 press_enter
 
 echo "Verify the modified customer on the ${bold}target database$: ${green}${TARGET_TYPE}.inventory.customers ${reset}:"
-docker compose -f ${DC_FILE} exec -u ${TARGET_USER} ${TARGET_NAME} \
-    psql -c \
-	"select * from inventory.customers where id=1005;"
+docker compose -f ${DC_FILE} exec -T -i ${TARGET_NAME} bash -c \
+    "/opt/mssql-tools/bin/sqlcmd -U $TARGET_USER -P $TARGET_PASSWORD -d $SYNC_DATABASE_TARGET -Q 'select * from $SYNC_SCHEMA_TARGET.customers where id=1005;'"
 echo "${bold}${red}WARNING:${reset} ${red}You should manually verify the modified customer on both of source and target database.${reset}"
 press_enter
 echo "---------------------------------------------"
@@ -63,7 +60,6 @@ echo "${bold}Deleting the customer with id='1005' from the source database.${res
 echo "Deleting the customer with id='1005'"
 echo "${bold}${blue}from the 'inventory.customers' table of the source ${SOURCE_TYPE} database.${reset}"
 echo "---------------------------------------------"
-
 docker compose -f ${DC_FILE} exec -e MYSQL_PWD=${SOURCE_PASSWORD} ${SOURCE_NAME} \
     mysql -u${SOURCE_USER} -e \
 	"delete from inventory.customers where id=1005;"
@@ -75,9 +71,8 @@ docker compose -f ${DC_FILE} exec -e MYSQL_PWD=${SOURCE_PASSWORD} ${SOURCE_NAME}
 press_enter
 
 echo "Verify the deleted customer on the ${bold}target database$: ${green}${TARGET_TYPE}.inventory.customers ${reset}:"
-docker compose -f ${DC_FILE} exec -u ${TARGET_USER} ${TARGET_NAME} \
-    psql -c \
-	"select * from inventory.customers where id=1005;"
+docker compose -f ${DC_FILE} exec -T -i ${TARGET_NAME} bash -c \
+    "/opt/mssql-tools/bin/sqlcmd -U $TARGET_USER -P $TARGET_PASSWORD -d $SYNC_DATABASE_TARGET -Q 'select * from $SYNC_SCHEMA_TARGET.customers where id=1005;'"
 echo "${bold}${red}WARNING:${reset} ${red}You should manually verify the deleted customer on both of source and target database.${reset}"
 press_enter
 echo "---------------------------------------------"

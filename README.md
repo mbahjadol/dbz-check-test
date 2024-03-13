@@ -1,6 +1,6 @@
 # dbz-check-test
 
-debezium unwrap-smt testing and check for each db connector this repo is collection of debezium unwrap smt based on https://github.com/mbahjadol/debezium-examples unwrap-smt and all additional testing check which using JDBC Sink connector. All of this is fork. 
+debezium combination testing and check for each db connector this repo is collection of debezium unwrap smt based on https://github.com/mbahjadol/debezium-examples unwrap-smt and all additional testing check which using JDBC Sink connector. All of this is fork. 
 
 ## Table of Contents
 
@@ -9,5 +9,9 @@ debezium unwrap-smt testing and check for each db connector this repo is collect
     * [MySQL to MySQL](my_my/README.md)
     * [PostgreSQL to MySQL](pg_my/README.md)
     * [PostgreSQL to PostgreSQL](pg_pg/README.md)
+    * [SQLServer to MySQL](sqlsvr_my/README.md)
+    * [ MySQL to SQLServer](my_sqlsvr/README.md)
+    * [SQLServer to PostgreSQL](sqlsvr_pg/README.md)
+    * [PostgreSQL to SQLServer](pg_sqlsvr/README.md)
 
 

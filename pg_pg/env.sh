@@ -34,7 +34,9 @@ export CONNECTOR_NAME_TARGET=$TOPIC_PREFIX"_target"
 export CONNECTOR_NAME_TARGET_has_connect="connect-"$TOPIC_PREFIX"_target"
 
 export SYNC_DATABASE_SOURCE="inventory"
+export SYNC_SCHEMA_SOURCE=""
 export SYNC_DATABASE_TARGET="postgres"
+export SYNC_SCHEMA_TARGET=""
 export SYNC_TABLE_LIST="customers,products" # WARNING: comma separated list of tables, value without spaces !
 
 

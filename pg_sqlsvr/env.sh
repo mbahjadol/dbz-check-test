@@ -13,36 +13,32 @@ export STATUS_STORAGE_TOPIC="_storage_statuses"
 
 # Source Database Configuration
 export SOURCE_NAME="source-db"
-export SOURCE_TYPE="mysql"
+export SOURCE_TYPE="postgres"
 export SOURCE_HOST=${SOURCE_NAME}
-export SOURCE_PORT="3306"
-export SOURCE_DB_ROOT_USER="root"
-export SOURCE_ROOT_PASSWORD="debezium"
-export SOURCE_USER="mysqluser"
-export SOURCE_PASSWORD="mysqlpw"
+export SOURCE_PORT="5432"
+export SOURCE_USER="postgres"
+export SOURCE_PASSWORD="postgres"
 export SOURCE_DATABASE_SERVER_ID="12345"
 
 # Target Database Configuration
 export TARGET_NAME="target-db"
-export TARGET_TYPE="postgresql"
+export TARGET_TYPE="sqlserver"
 export TARGET_HOST=${TARGET_NAME}
-export TARGET_PORT="5432"
-export TARGET_DB_ROOT_USER="postgres"
-export TARGET_ROOT_PASSWORD="postgres"
-export TARGET_USER="postgres"
-export TARGET_PASSWORD="postgres"
+export TARGET_PORT="1433"
+export TARGET_USER="sa"
+export TARGET_PASSWORD="Password!"
 export TARGET_DATABASE_SERVER_ID="12346"
 
 # Connector Configuration
-export TOPIC_PREFIX="mypg"
+export TOPIC_PREFIX="pgsqlsvr"
 export CONNECTOR_NAME_SOURCE=$TOPIC_PREFIX"_source"
 export CONNECTOR_NAME_TARGET=$TOPIC_PREFIX"_target"
 export CONNECTOR_NAME_TARGET_has_connect="connect-"$TOPIC_PREFIX"_target"
 
 export SYNC_DATABASE_SOURCE="inventory"
 export SYNC_SCHEMA_SOURCE=""
-export SYNC_DATABASE_TARGET="postgres"
-export SYNC_SCHEMA_TARGET="inventory"
+export SYNC_DATABASE_TARGET="inventory"
+export SYNC_SCHEMA_TARGET="dbo"
 export SYNC_TABLE_LIST="customers,products" # WARNING: comma separated list of tables, value without spaces !
 
 

@@ -12,17 +12,19 @@ echo "Inserting new data with id='1005', first_name='John', last_name='Tor', and
 echo "${bold}${blue}into the 'inventory.customers' table of the source database.${reset}"
 echo "---------------------------------------------"
 
-docker compose -f ${DC_FILE} exec -u postgres ${SOURCE_NAME} \
-    psql -c \
-    "insert into inventory.customers (id,first_name,last_name,email) \
-     values (1005,'John','Tor','john.tor@example.com');"
+qry="SET IDENTITY_INSERT customers ON; \
+    insert customers (id,first_name,last_name,email) \
+        values (1005,'John','Tor','john.tor@example.com'); \
+    SET IDENTITY_INSERT customers OFF;" 
+echo $qry | docker compose -f ${DC_FILE} exec -T -i ${SOURCE_NAME} bash -c \
+    "/opt/mssql-tools/bin/sqlcmd -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE"
 
-echo "Verify the new inserted customer on the ${bold}source database: ${blue}postgresql.inventory.customers ${reset}:"
-docker compose -f ${DC_FILE} exec -u postgres ${SOURCE_NAME} \
-    psql -c "select * from inventory.customers where id=1005;"
+echo "Verify the new inserted customer on the ${bold}source database: ${blue}${SOURCE_TYPE}.inventory.dbo.customers ${reset}:"
+docker compose -f ${DC_FILE} exec -T -i ${SOURCE_NAME} bash -c \
+    "/opt/mssql-tools/bin/sqlcmd -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE -Q 'select * from $SYNC_SCHEMA_SOURCE.customers where id=1005;'"
 press_enter
 
-echo "Verify the new inserted customer on the ${bold}target database$: ${green}mysql.inventory.customers ${reset}:"
+echo "Verify the new inserted customer on the ${bold}target database$: ${green}${TARGET_TYPE}.inventory.customers ${reset}:"
 docker compose -f ${DC_FILE} exec -e MYSQL_PWD=${TARGET_PASSWORD} ${TARGET_NAME} \
     mysql -u${TARGET_USER} -e "select * from inventory.customers where id=1005;"
 echo "${bold}${red}WARNING:${reset} ${red}You should manually verify the new inserted customer on both of source and target database.${reset}"
@@ -36,13 +38,13 @@ echo "Updating the email of the customer with id='1005' to first_name='mbah', la
 echo "${bold}${blue}into the 'inventory.customers' table of the source database.${reset}"
 echo "---------------------------------------------"
 
-docker compose -f ${DC_FILE} exec -u postgres ${SOURCE_NAME} \
-    psql -c \
-    "update inventory.customers set first_name='mbah', last_name='jadol', email='mbah.jadol@example.com' where id=1005;"
+qry="update $SYNC_SCHEMA_SOURCE.customers set first_name='mbah', last_name='jadol', email='mbah.jadol@example.com' where id=1005;"
+echo $qry | docker compose -f ${DC_FILE} exec -T -i ${SOURCE_NAME} bash -c \
+    "/opt/mssql-tools/bin/sqlcmd -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE"
 
 echo "Verify the modified customer on the ${bold}source database: ${blue}postgresql.inventory.customers ${reset}:"
-docker compose -f ${DC_FILE} exec -u postgres ${SOURCE_NAME} \
-    psql -c "select * from inventory.customers where id=1005;"
+docker compose -f ${DC_FILE} exec -T -i ${SOURCE_NAME} bash -c \
+    "/opt/mssql-tools/bin/sqlcmd -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE -Q 'select * from $SYNC_SCHEMA_SOURCE.customers where id=1005;'"
 press_enter
 
 echo "Verify the modified customer on the ${bold}target database$: ${green}mysql.inventory.customers ${reset}:"
@@ -58,18 +60,18 @@ echo "${bold}Deleting the customer with id='1005' from the source database.${res
 echo "Deleting the customer with id='1005'"
 echo "${bold}${blue}from the 'inventory.customers' table of the source database.${reset}"
 echo "---------------------------------------------"
-
-docker compose -f ${DC_FILE} exec -u postgres ${SOURCE_NAME} \
-    psql -c "delete from inventory.customers where id=1005;"
+docker compose -f ${DC_FILE} exec -T -i ${SOURCE_NAME} bash -c \
+    "/opt/mssql-tools/bin/sqlcmd -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE -Q 'delete from $SYNC_SCHEMA_SOURCE.customers where id=1005;'"
 
 echo "Verify the deleted customer on the ${bold}source database: ${blue}postgresql.inventory.customers ${reset}:"
-docker compose -f ${DC_FILE} exec -u postgres ${SOURCE_NAME} \
-    psql -c "select * from inventory.customers where id=1005;"
+docker compose -f ${DC_FILE} exec -T -i ${SOURCE_NAME} bash -c \
+    "/opt/mssql-tools/bin/sqlcmd -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE -Q 'select * from $SYNC_SCHEMA_SOURCE.customers where id=1005;'"
 press_enter
 
 echo "Verify the deleted customer on the ${bold}target database$: ${green}mysql.inventory.customers ${reset}:"
 docker compose -f ${DC_FILE} exec -e MYSQL_PWD=${TARGET_PASSWORD} ${TARGET_NAME} \
     mysql -u${TARGET_USER} -e "select * from inventory.customers where id=1005;"
+    
 echo "${bold}${red}WARNING:${reset} ${red}You should manually verify the deleted customer on both of source and target database.${reset}"
 press_enter
 echo "---------------------------------------------"
