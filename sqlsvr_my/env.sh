@@ -13,11 +13,11 @@ export STATUS_STORAGE_TOPIC="_storage_statuses"
 
 # Source Database Configuration
 export SOURCE_NAME="source-db"
-export SOURCE_TYPE="postgres"
+export SOURCE_TYPE="sqlsvr"
 export SOURCE_HOST=${SOURCE_NAME}
-export SOURCE_PORT="5432"
-export SOURCE_USER="postgres"
-export SOURCE_PASSWORD="postgres"
+export SOURCE_PORT="1433"
+export SOURCE_USER="sa"
+export SOURCE_PASSWORD="Password!"
 
 # Target Database Configuration
 export TARGET_NAME="target-db"
@@ -30,13 +30,13 @@ export TARGET_USER="mysqluser"
 export TARGET_PASSWORD="mysqlpw"
 
 # Connector Configuration
-export TOPIC_PREFIX="pgmy"
+export TOPIC_PREFIX="sqlsvrmy"
 export CONNECTOR_NAME_SOURCE=$TOPIC_PREFIX"_source"
 export CONNECTOR_NAME_TARGET=$TOPIC_PREFIX"_target"
 export CONNECTOR_NAME_TARGET_has_connect="connect-"$TOPIC_PREFIX"_target"
 
 export SYNC_DATABASE_SOURCE="inventory"
-export SYNC_SCHEMA_SOURCE=""
+export SYNC_SCHEMA_SOURCE="dbo"
 export SYNC_DATABASE_TARGET="inventory"
 export SYNC_SCHEMA_TARGET=""
 export SYNC_TABLE_LIST="customers,products" # WARNING: comma separated list of tables, value without spaces !

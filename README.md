@@ -9,5 +9,7 @@ debezium unwrap-smt testing and check for each db connector this repo is collect
     * [MySQL to MySQL](my_my/README.md)
     * [PostgreSQL to MySQL](pg_my/README.md)
     * [PostgreSQL to PostgreSQL](pg_pg/README.md)
+    * [SQLServer to MySQL](sqlsvr_my/README.md)
+    * [ MySQL to SQLServer](my_sqlsvr/README.md)
 
 
