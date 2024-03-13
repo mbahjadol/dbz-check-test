@@ -1,0 +1,22 @@
+{
+    "name": "XXXXX",
+    "config": {
+        "connector.class": "io.debezium.connector.jdbc.JdbcSinkConnector",
+        "tasks.max": "1",
+        "database.driver": "org.postgresql.Driver",
+        "connection.url": "XXXXX",
+        "connection.username": "XXXXX",
+        "connection.password": "XXXXX",
+        "auto.create": "true",
+        "insert.mode": "upsert",
+        "delete.enabled": "true",
+        "primary.key.fields": "id",
+        "primary.key.mode": "record_key",
+        "schema.evolution": "basic",
+        "topics": "XXXXX",
+        "transforms": "route",
+        "transforms.route.type": "org.apache.kafka.connect.transforms.RegexRouter",
+        "transforms.route.regex": "([^.]+)\\_([^.]+)",
+        "transforms.route.replacement": "$2"
+    }
+}
