@@ -43,7 +43,7 @@ In the time I'm write this doc and test it, I'm using oracle client version 21.1
                           |
                   +-------v--------+
                   |                |
-                  |      MySQL     |
+                  |     Oracle     |
                   |                |
                   +----------------+
 
