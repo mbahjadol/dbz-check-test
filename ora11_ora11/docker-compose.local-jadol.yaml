@@ -1,0 +1,70 @@
+version: '3'
+services:
+  zookeeper:
+    container_name: zookeeper
+    image: debezium/zookeeper:${DEBEZIUM_VERSION}
+    ports:
+     - 2181:2181
+     - 2888:2888
+     - 3888:3888
+  kafka:  
+    container_name: kafka
+    image: quay.io/debezium/kafka:${DEBEZIUM_VERSION}
+    ports:
+     - 9092:9092
+    depends_on:
+     - zookeeper
+    environment:
+     - ZOOKEEPER_CONNECT=zookeeper:2181
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092  # Adjust if your broker name is different     
+  connect:
+    container_name: connect
+    image: mbahjadol/dbz-connect-orajdbc:1.7
+    ports:
+     - 8083:8083
+     - 1976:1976
+     - 5005:5005
+    links:
+     - kafka
+     - ${SOURCE_NAME}
+     - ${TARGET_NAME}
+    environment:
+     - BOOTSTRAP_SERVERS=kafka:9092
+     - GROUP_ID=1
+     - CONFIG_STORAGE_TOPIC=my_connect_configs
+     - OFFSET_STORAGE_TOPIC=my_connect_offsets
+     - STATUS_STORAGE_TOPIC=my_connect_statuses
+     - LD_LIBRARY_PATH=/instant_client
+     - KAFKA_DEBUG=true
+     - DEBUG_SUSPEND_FLAG=n
+     - JAVA_DEBUG_PORT=0.0.0.0:5005
+     - KAFKA_OPTS=-javaagent:/kafka/etc/jmx_prometheus_javaagent.jar=8080:/kafka/etc/config.yml
+     - JMXHOST=localhost
+     - JMXPORT=1976
+  source-db:
+    container_name: ${SOURCE_NAME}
+    hostname: ${SOURCE_NAME}
+    image: mbahjadol/dbz-example-ora-source:xe-11g
+    ports:
+      - 1521:1521
+      - 5500:5500
+    environment:
+    - ORACLE_ALLOW_REMOTE=YES
+    - ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
+  target-db:
+    container_name: ${TARGET_NAME}
+    hostname: ${TARGET_NAME}
+    image: mbahjadol/dbz-example-ora-target:xe-11g
+    ports:
+      - 3042:1521
+      - 3300:5500
+    environment:
+    - ORACLE_ALLOW_REMOTE=YES
+    - ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
