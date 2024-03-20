@@ -1,0 +1,24 @@
+{
+    "name": "XXXXX",
+    "config": {
+        "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+        "tasks.max": "1",
+        "dialect.name": "OracleDatabaseDialect",
+        "connection.url": "XXXXX",
+        "database.dbname": "XXXXX",
+        "database.pdb.name": "XXXXX",
+        "connection.username": "XXXXX",
+        "connection.password": "XXXXX",
+        "schema.evolution": "none",
+        "auto.create": "true",
+        "insert.mode": "upsert",
+        "delete.enabled": "true",
+        "primary.key.fields": "id",
+        "primary.key.mode": "record_key",
+        "transforms": "unwrap",
+        "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+        "transforms.unwrap.drop.tombstones": "false",
+        "transforms.unwrap.delete.handling.mode": "rewrite",
+        "topics": "myora_customers"
+    }
+}

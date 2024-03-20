@@ -1,0 +1,27 @@
+{
+    "name": "XXXXX",
+    "config": {
+        "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+        "tasks.max": "1",
+        "dialect.name": "OracleDatabaseDialect",
+        "connection.oracle.jdbc.ReadTimeout": "45000",
+        "insert.mode": "upsert",
+        "auto.create": "true",
+        "delete.enabled": "true",
+        "pk.mode": "record_key",
+        "connection.url": "XXXXX",
+        "database.dbname": "XXXXX",
+        "database.pdb.name": "XXXXX",
+        "connection.user": "XXXXX",
+        "connection.password": "XXXXX",
+        "schema.evolution": "basic",
+        "transforms": "unwrap,removePrefix",
+        "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+        "transforms.unwrap.drop.tombstones": "false",
+        "transforms.unwrap.delete.handling.mode": "rewrite",
+        "topics": "XXXXX",
+        "transforms.removePrefix.type": "org.apache.kafka.connect.transforms.RegexRouter", 
+        "transforms.removePrefix.regex": "XXXXX_(.*)",  
+        "transforms.removePrefix.replacement": "$1" 
+    }
+}
