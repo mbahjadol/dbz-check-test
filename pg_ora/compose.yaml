@@ -1,0 +1,88 @@
+version: '2'
+services:
+  zookeeper:
+    container_name: zookeeper
+    image: quay.io/debezium/zookeeper:${DEBEZIUM_VERSION}
+    ports:
+     - 2181:2181
+     - 2888:2888
+     - 3888:3888
+  kafka:  
+    container_name: kafka
+    image: quay.io/debezium/kafka:${DEBEZIUM_VERSION}
+    ports:
+     - 9092:9092
+    depends_on:
+     - zookeeper
+    environment:
+     - ZOOKEEPER_CONNECT=zookeeper:2181
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092  # Adjust if your broker name is different     
+  connect:
+    container_name: connect
+    image: debezium/connect-with-oracle-jdbc:${DEBEZIUM_VERSION}
+    build:
+      context: debezium-with-oracle-jdbc
+      args:
+        DEBEZIUM_VERSION: ${DEBEZIUM_VERSION}
+    ports:
+     - 8083:8083
+     - 5005:5005
+    links:
+     - kafka
+     - ${SOURCE_NAME}
+     - ${TARGET_NAME}
+    environment:
+     - BOOTSTRAP_SERVERS=kafka:9092
+     - GROUP_ID=1
+     - CONFIG_STORAGE_TOPIC=my_connect_configs
+     - OFFSET_STORAGE_TOPIC=my_connect_offsets
+     - STATUS_STORAGE_TOPIC=my_connect_statuses
+     - LD_LIBRARY_PATH=/instant_client
+     - KAFKA_DEBUG=true
+     - DEBUG_SUSPEND_FLAG=n
+     - JAVA_DEBUG_PORT=0.0.0.0:5005
+  # connect:
+  #   container_name: connect
+  #   image: quay.io/debezium/connect:${DEBEZIUM_VERSION}
+  #   ports:
+  #    - 8083:8083
+  #   depends_on:
+  #    - kafka
+  #    - ${SOURCE_NAME}
+  #    - ${TARGET_NAME}
+  #   environment:
+  #    - BOOTSTRAP_SERVERS=kafka:9092
+  #    - GROUP_ID=1
+  #    - CONFIG_STORAGE_TOPIC=${CONFIG_STORAGE_TOPIC}
+  #    - OFFSET_STORAGE_TOPIC=${OFFSET_STORAGE_TOPIC}
+  #    - STATUS_STORAGE_TOPIC=${STATUS_STORAGE_TOPIC}
+  #    - CONNECT_PLUGIN_PATH=/kafka/connect
+  source-db:
+    container_name: ${SOURCE_NAME}
+    image: quay.io/debezium/example-postgres:${DEBEZIUM_VERSION}
+    ports:
+     - 5432:5432
+    environment:
+     - POSTGRES_USER=${SOURCE_USER}
+     - POSTGRES_PASSWORD=${SOURCE_PASSWORD}
+  target-db:
+    container_name: ${TARGET_NAME}
+    image: gvenzl/oracle-xe:21
+    shm_size: 1g
+    ports:
+     - 1521:1521
+    environment:
+     - ORACLE_USER=${TARGET_SYSTEM_USER}
+     - ORACLE_PASSWORD=${TARGET_ADMIN_PASSWORD}
+     - ORACLE_ALLOW_REMOTE=true
+    #  - ORACLE_DATABASE=${SYNC_DATABASE_TARGET}
+    #  - TARGET_PDB=${SYNC_DATABASE_TARGET}
+     - APP_USER=${TARGET_USER}
+     - APP_USER_PASSWORD=${TARGET_PASSWORD}

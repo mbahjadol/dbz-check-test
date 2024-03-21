@@ -14,10 +14,10 @@ debezium combination testing and check for each db connector this repo is collec
     * [SQLServer to PostgreSQL](sqlsvr_pg/README.md)
     * [PostgreSQL to SQLServer](pg_sqlsvr/README.md)
     * [SQLServer to SQLServer](sqlsvr_sqlsvr/README.md)
-    * [Oracle-11g to Oracle-11g ](ora11_ora11/README.md) you must download manually oracle instant client, I'm not provided it because licensing 
+    * [Oracle-11g to Oracle-11g ](ora11_ora11/README.md) you must download manually oracle instant client, I'm not provided it because licensing issues. the sink connector is using confluent jdbc. 
     * [MySQL to Oracle](my_ora/README.md) successfully with oracle 21c XE, you must download manually oracle instant client, I'm not provided it because licensing issues. the sink connector is using confluent jdbc.
     * ~~[Oracle to MySQL ](ora_my/README.md)~~ WIP
-    * ~~[PostgreSQL to Oracle](pg_ora/README.md)~~ WIP
+    * [PostgreSQL to Oracle](pg_ora/README.md) you must download manually oracle instant client, I'm not provided it because licensing issues. the sink connector is using confluent jdbc.
     * ~~[Oracle to PostgreSQ](ora_pg/README.md)~~ WIP
     * ~~[SQLServer to Oracle](sqlsvr_ora/README.md)~~ WIP
     * ~~[Oracle to SQLServer](ora_sqlsvr/README.md)~~ WIP
