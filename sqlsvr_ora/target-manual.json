@@ -1,0 +1,28 @@
+{
+    "name": "myora_target",
+    "config": {
+        "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+        "tasks.max": "1",
+        "dialect.name": "OracleDatabaseDialect",
+        "connection.oracle.jdbc.ReadTimeout": "45000",
+        "insert.mode": "upsert",
+        "auto.create": "true",
+        "delete.enabled": "true",
+        "pk.fields": "id",
+        "pk.mode": "record_key",
+        "connection.url": "jdbc:oracle:thin:@target-db:1521/XEPDB1",
+        "database.dbname": "XEPDB1",
+        "database.pdb.name": "XEPDB1",
+        "connection.user": "inventoryuser",
+        "connection.password": "inventorypw",
+        "schema.evolution": "basic",
+        "transforms": "unwrap,removePrefix",
+        "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+        "transforms.unwrap.drop.tombstones": "false",
+        "transforms.unwrap.delete.handling.mode": "rewrite",
+        "topics": "myora_customers,myora_products",
+        "transforms.removePrefix.type": "org.apache.kafka.connect.transforms.RegexRouter", 
+        "transforms.removePrefix.regex": "myora_(.*)",  
+        "transforms.removePrefix.replacement": "$1" 
+    }
+}

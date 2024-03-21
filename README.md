@@ -19,7 +19,7 @@ debezium combination testing and check for each db connector this repo is collec
     * ~~[Oracle to MySQL ](ora_my/README.md)~~ WIP
     * [PostgreSQL to Oracle](pg_ora/README.md) you must download manually oracle instant client, I'm not provided it because licensing issues. the sink connector is using confluent jdbc.
     * ~~[Oracle to PostgreSQ](ora_pg/README.md)~~ WIP
-    * ~~[SQLServer to Oracle](sqlsvr_ora/README.md)~~ WIP
+    * [SQLServer to Oracle](sqlsvr_ora/README.md) you must download manually oracle instant client, I'm not provided it because licensing issues. the sink connector is using confluent jdbc.
     * ~~[Oracle to SQLServer](ora_sqlsvr/README.md)~~ WIP
     * ~~[MongoDB to MongoDB](mgdb_mgdb/README.md)~~ WIP
     * ~~[MySQL to MongoDB](my_mgdb/README.md)~~ WIP
