@@ -12,7 +12,7 @@ function check_sqlserver_container() {
 
         if [ "$status" == "running" ]; then
             # SQL Server takes a while to start up, check if it's ready to accept connections
-            ready=$(docker exec -e SA_PASSWORD=$SA_PWD $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U $SA_USER -P $SA_PWD -Q "SELECT 1" 2>/dev/null)
+            ready=$(docker exec -e SA_PASSWORD=$SA_PWD $container_name /opt/mssql-tools18/bin/sqlcmd -S localhost -U $SA_USER -P $SA_PWD -Q "SELECT 1" -C -N 2>/dev/null)
 
             if [[ "$ready" == *"1 rows affected"* ]]; then
                 echo -e "... ${green}READY${reset}"
