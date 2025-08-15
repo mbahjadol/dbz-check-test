@@ -25,7 +25,7 @@ press_enter
 
 echo "Verify the new inserted customer on the ${bold}target database$: ${green}${TARGET_TYPE}.inventory.customers ${reset}:"
 docker compose -f ${DC_FILE} exec -T -i ${TARGET_NAME} bash -c \
-    "/opt/mssql-tools/bin/sqlcmd -U $TARGET_USER -P $TARGET_PASSWORD -d $SYNC_DATABASE_TARGET -Q 'select * from $SYNC_SCHEMA_TARGET.customers where id=1005;'"
+    "$SQLCMD -U $TARGET_USER -P $TARGET_PASSWORD -d $SYNC_DATABASE_TARGET -Q 'select * from $SYNC_SCHEMA_TARGET.customers where id=1005;'"
 echo "${bold}${red}WARNING:${reset} ${red}You should manually verify the new inserted customer on both of source and target database.${reset}"
 press_enter
 echo "---------------------------------------------"
@@ -49,7 +49,7 @@ press_enter
 
 echo "Verify the modified customer on the ${bold}target database$: ${green}${TARGET_TYPE}.inventory.customers ${reset}:"
 docker compose -f ${DC_FILE} exec -T -i ${TARGET_NAME} bash -c \
-    "/opt/mssql-tools/bin/sqlcmd -U $TARGET_USER -P $TARGET_PASSWORD -d $SYNC_DATABASE_TARGET -Q 'select * from $SYNC_SCHEMA_TARGET.customers where id=1005;'"
+    "$SQLCMD -U $TARGET_USER -P $TARGET_PASSWORD -d $SYNC_DATABASE_TARGET -Q 'select * from $SYNC_SCHEMA_TARGET.customers where id=1005;'"
 echo "${bold}${red}WARNING:${reset} ${red}You should manually verify the modified customer on both of source and target database.${reset}"
 press_enter
 echo "---------------------------------------------"
@@ -72,7 +72,7 @@ press_enter
 
 echo "Verify the deleted customer on the ${bold}target database$: ${green}${TARGET_TYPE}.inventory.customers ${reset}:"
 docker compose -f ${DC_FILE} exec -T -i ${TARGET_NAME} bash -c \
-    "/opt/mssql-tools/bin/sqlcmd -U $TARGET_USER -P $TARGET_PASSWORD -d $SYNC_DATABASE_TARGET -Q 'select * from $SYNC_SCHEMA_TARGET.customers where id=1005;'"
+    "$SQLCMD -U $TARGET_USER -P $TARGET_PASSWORD -d $SYNC_DATABASE_TARGET -Q 'select * from $SYNC_SCHEMA_TARGET.customers where id=1005;'"
 echo "${bold}${red}WARNING:${reset} ${red}You should manually verify the deleted customer on both of source and target database.${reset}"
 press_enter
 echo "---------------------------------------------"
