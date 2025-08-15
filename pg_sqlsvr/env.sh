@@ -42,6 +42,8 @@ export SYNC_SCHEMA_TARGET="dbo"
 export SYNC_TABLE_LIST="customers,products" # WARNING: comma separated list of tables, value without spaces !
 
 
+# SQL SERVER Command Path and include the -C and -N options for secure connections
+export SQLCMD="/opt/mssql-tools18/bin/sqlcmd -C -N"
 
 # Utilities Function and Text Formatting
 function press_enter() {
