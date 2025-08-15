@@ -17,16 +17,16 @@ qry="SET IDENTITY_INSERT customers ON; \
         values (1005,'John','Tor','john.tor@example.com'); \
     SET IDENTITY_INSERT customers OFF;" 
 echo $qry | docker compose -f ${DC_FILE} exec -T -i ${SOURCE_NAME} bash -c \
-    "/opt/mssql-tools/bin/sqlcmd -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE"
+    "$SQLCMD -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE"
 
 echo "Verify the new inserted customer on the ${bold}source database: ${blue}${SOURCE_TYPE}.inventory.dbo.customers ${reset}:"
 docker compose -f ${DC_FILE} exec -T -i ${SOURCE_NAME} bash -c \
-    "/opt/mssql-tools/bin/sqlcmd -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE -Q 'select * from $SYNC_SCHEMA_SOURCE.customers where id=1005;'"
+    "$SQLCMD -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE -Q 'select * from $SYNC_SCHEMA_SOURCE.customers where id=1005;'"
 press_enter
 
 echo "Verify the new inserted customer on the ${bold}target database$: ${green}${TARGET_TYPE}.inventory.customers ${reset}:"
 docker compose -f ${DC_FILE} exec -T -i ${TARGET_NAME} bash -c \
-    "/opt/mssql-tools/bin/sqlcmd -U $TARGET_USER -P $TARGET_PASSWORD -d $SYNC_DATABASE_TARGET -Q 'select * from $SYNC_SCHEMA_TARGET.customers where id=1005;'"
+    "$SQLCMD -U $TARGET_USER -P $TARGET_PASSWORD -d $SYNC_DATABASE_TARGET -Q 'select * from $SYNC_SCHEMA_TARGET.customers where id=1005;'"
 echo "${bold}${red}WARNING:${reset} ${red}You should manually verify the new inserted customer on both of source and target database.${reset}"
 press_enter
 echo "---------------------------------------------"
@@ -40,16 +40,16 @@ echo "---------------------------------------------"
 
 qry="update $SYNC_SCHEMA_SOURCE.customers set first_name='mbah', last_name='jadol', email='mbah.jadol@example.com' where id=1005;"
 echo $qry | docker compose -f ${DC_FILE} exec -T -i ${SOURCE_NAME} bash -c \
-    "/opt/mssql-tools/bin/sqlcmd -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE"
+    "$SQLCMD -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE"
 
 echo "Verify the modified customer on the ${bold}source database: ${blue}${SOURCE_TYPE}.inventory.customers ${reset}:"
 docker compose -f ${DC_FILE} exec -T -i ${SOURCE_NAME} bash -c \
-    "/opt/mssql-tools/bin/sqlcmd -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE -Q 'select * from $SYNC_SCHEMA_SOURCE.customers where id=1005;'"
+    "$SQLCMD -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE -Q 'select * from $SYNC_SCHEMA_SOURCE.customers where id=1005;'"
 press_enter
 
 echo "Verify the modified customer on the ${bold}target database$: ${green}${TARGET_TYPE}.inventory.customers ${reset}:"
 docker compose -f ${DC_FILE} exec -T -i ${TARGET_NAME} bash -c \
-    "/opt/mssql-tools/bin/sqlcmd -U $TARGET_USER -P $TARGET_PASSWORD -d $SYNC_DATABASE_TARGET -Q 'select * from $SYNC_SCHEMA_TARGET.customers where id=1005;'"
+    "$SQLCMD -U $TARGET_USER -P $TARGET_PASSWORD -d $SYNC_DATABASE_TARGET -Q 'select * from $SYNC_SCHEMA_TARGET.customers where id=1005;'"
 echo "${bold}${red}WARNING:${reset} ${red}You should manually verify the modified customer on both of source and target database.${reset}"
 press_enter
 echo "---------------------------------------------"
@@ -61,16 +61,16 @@ echo "Deleting the customer with id='1005'"
 echo "${bold}${blue}from the 'inventory.customers' table of the source database.${reset}"
 echo "---------------------------------------------"
 docker compose -f ${DC_FILE} exec -T -i ${SOURCE_NAME} bash -c \
-    "/opt/mssql-tools/bin/sqlcmd -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE -Q 'delete from $SYNC_SCHEMA_SOURCE.customers where id=1005;'"
+    "$SQLCMD -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE -Q 'delete from $SYNC_SCHEMA_SOURCE.customers where id=1005;'"
 
 echo "Verify the deleted customer on the ${bold}source database: ${blue}${SOURCE_TYPE}.inventory.customers ${reset}:"
 docker compose -f ${DC_FILE} exec -T -i ${SOURCE_NAME} bash -c \
-    "/opt/mssql-tools/bin/sqlcmd -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE -Q 'select * from $SYNC_SCHEMA_SOURCE.customers where id=1005;'"
+    "$SQLCMD -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE -Q 'select * from $SYNC_SCHEMA_SOURCE.customers where id=1005;'"
 press_enter
 
 echo "Verify the deleted customer on the ${bold}target database$: ${green}${TARGET_TYPE}.inventory.customers ${reset}:"
 docker compose -f ${DC_FILE} exec -T -i ${TARGET_NAME} bash -c \
-    "/opt/mssql-tools/bin/sqlcmd -U $TARGET_USER -P $TARGET_PASSWORD -d $SYNC_DATABASE_TARGET -Q 'select * from $SYNC_SCHEMA_TARGET.customers where id=1005;'"
+    "$SQLCMD -U $TARGET_USER -P $TARGET_PASSWORD -d $SYNC_DATABASE_TARGET -Q 'select * from $SYNC_SCHEMA_TARGET.customers where id=1005;'"
     
 echo "${bold}${red}WARNING:${reset} ${red}You should manually verify the deleted customer on both of source and target database.${reset}"
 press_enter
