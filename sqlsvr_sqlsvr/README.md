@@ -13,6 +13,12 @@ data flow with SQLServer as source connector and MySQL as sink connector example
         * [Stopping](#stopping)
 
 
+### Specifications
+
+  SQLServer version 2019
+  FROM mcr.microsoft.com/mssql/server:2019-latest
+
+
 ### Topology
 
 
