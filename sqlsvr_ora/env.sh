@@ -49,6 +49,10 @@ export SYNC_DATABASE_TARGET="XEPDB1"
 export SYNC_SCHEMA_TARGET=""
 export SYNC_TABLE_LIST="addresses,customers,products,orders,products_on_hand" # WARNING: comma separated list of tables, value without spaces !
 
+# SQL SERVER Command Path and include the -C and -N options for secure connections
+export SQLCMD="/opt/mssql-tools18/bin/sqlcmd -C -N"
+
+
 # Utilities Function and Text Formatting
 function press_enter() {
     read -n 1 -s -r -p "# Press Enter to continue... \$ "

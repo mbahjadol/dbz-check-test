@@ -3,7 +3,7 @@
 source ./env.sh
 
 # setup initiate files to be mount in the container
-cat mysql-init/inventory.sql.templ | sed -e 's/XXX_USER_XXX/mysqluser/g' | sed -e 's/XXX_PASSWORD_XXX/mysqlpw/g' > mysql-init/inventory.sql
+# cat mysql-init/inventory.sql.templ | sed -e 's/XXX_USER_XXX/mysqluser/g' | sed -e 's/XXX_PASSWORD_XXX/mysqlpw/g' > mysql-init/inventory.sql
 
 
 echo "starting the containers."

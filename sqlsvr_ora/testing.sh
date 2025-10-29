@@ -20,11 +20,11 @@ qry="SET IDENTITY_INSERT customers ON; \
         values (1005,'John','Tor','john.tor@example.com'); \
     SET IDENTITY_INSERT customers OFF;" 
 echo $qry | docker compose -f ${DC_FILE} exec -T -i ${SOURCE_NAME} bash -c \
-    "/opt/mssql-tools/bin/sqlcmd -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE"
+    "$SQLCMD -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE"
 
 echo "Verify the new inserted customer on the ${bold}source database: ${blue}${SOURCE_TYPE}.inventory.customers ${reset}:"
 docker compose -f ${DC_FILE} exec -T -i ${SOURCE_NAME} bash -c \
-    "/opt/mssql-tools/bin/sqlcmd -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE -Q 'select * from $SYNC_SCHEMA_SOURCE.customers where id=1005;'"
+    "$SQLCMD -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE -Q 'select * from $SYNC_SCHEMA_SOURCE.customers where id=1005;'"
 echo "${yellow}Please wait for a moment to let the connector sync the data to the target database.${reset}"
 press_enter
 
@@ -48,11 +48,11 @@ echo "---------------------------------------------"
 
 qry="update $SYNC_SCHEMA_SOURCE.customers set first_name='mbah', last_name='jadol', email='mbah.jadol@example.com' where id=1005;"
 echo $qry | docker compose -f ${DC_FILE} exec -T -i ${SOURCE_NAME} bash -c \
-    "/opt/mssql-tools/bin/sqlcmd -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE"
+    "$SQLCMD -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE"
 
 echo "Verify the modified customer on the ${bold}source database: ${blue}${SOURCE_TYPE}.inventory.customers ${reset}:"
 docker compose -f ${DC_FILE} exec -T -i ${SOURCE_NAME} bash -c \
-    "/opt/mssql-tools/bin/sqlcmd -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE -Q 'select * from $SYNC_SCHEMA_SOURCE.customers where id=1005;'"
+    "$SQLCMD -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE -Q 'select * from $SYNC_SCHEMA_SOURCE.customers where id=1005;'"
 echo "${yellow}Please wait for a moment to let the connector sync the data to the target database.${reset}"
 press_enter
 
@@ -75,11 +75,11 @@ echo "${bold}${blue}from the 'inventory.customers' table of the source ${SOURCE_
 echo "---------------------------------------------"
 
 docker compose -f ${DC_FILE} exec -T -i ${SOURCE_NAME} bash -c \
-    "/opt/mssql-tools/bin/sqlcmd -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE -Q 'delete from $SYNC_SCHEMA_SOURCE.customers where id=1005;'"
+    "$SQLCMD -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE -Q 'delete from $SYNC_SCHEMA_SOURCE.customers where id=1005;'"
 
 echo "Verify the deleted customer on the ${bold}source database: ${blue}${SOURCE_TYPE}.inventory.customers ${reset}:"
 docker compose -f ${DC_FILE} exec -T -i ${SOURCE_NAME} bash -c \
-    "/opt/mssql-tools/bin/sqlcmd -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE -Q 'select * from $SYNC_SCHEMA_SOURCE.customers where id=1005;'"
+    "$SQLCMD -U $SOURCE_USER -P $SOURCE_PASSWORD -d $SYNC_DATABASE_SOURCE -Q 'select * from $SYNC_SCHEMA_SOURCE.customers where id=1005;'"
 echo "${yellow}Please wait for a moment to let the connector sync the data to the target database.${reset}"
 press_enter
 
