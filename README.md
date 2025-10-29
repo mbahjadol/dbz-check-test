@@ -2,6 +2,18 @@
 
 debezium combination testing and check for each db connector this repo is collection of debezium test on https://github.com/mbahjadol/debezium-examples and all additional testing check which using JDBC Sink connector. All of this is fork. 
 
+## Specification Version
+
+Each database will use abbreviation/short name represent their database engine version.
+Here the list of abbrev and their engine version:
+
+- SQLServer (sqlsvr) -> MS SQLServer 2019
+- SQLServer22 (sqlsvr22) -> MS SQLServer 2022
+- Oracle (ora) -> Oracle 21c XE
+- Oracle-11g (ora11) -> Oracle version 11g
+- MySQL (my) -> MySQL Version 8.2.0
+- PostgreSQL (pg) -> PostgreSQL 16.2 
+
 ## Table of Contents
 
 * [Debezium Synchronize](#jdbc-sink)
@@ -14,6 +26,7 @@ debezium combination testing and check for each db connector this repo is collec
     * [SQLServer to PostgreSQL](sqlsvr_pg/README.md)
     * [PostgreSQL to SQLServer](pg_sqlsvr/README.md)
     * [SQLServer to SQLServer](sqlsvr_sqlsvr/README.md)
+    * [SQLServer22 to SQLServer22](sqlsvr22_sqlsvr22/README.md)
     * [Oracle-11g to Oracle-11g ](ora11_ora11/README.md) you must download manually oracle instant client, I'm not provided it because licensing issues. the sink connector is using confluent jdbc. 
     * [MySQL to Oracle](my_ora/README.md) successfully with oracle 21c XE, you must download manually oracle instant client, I'm not provided it because licensing issues. the sink connector is using confluent jdbc.
     * ~~[Oracle to MySQL ](ora_my/README.md)~~ WIP
@@ -30,3 +43,7 @@ debezium combination testing and check for each db connector this repo is collec
     * ~~[MongoDB to SQLServer](mgdb_sqlsvr/README.md)~~ WIP
     * ~~[Oracle to MongoDB](ora_mgdb/README.md)~~ WIP
     * ~~[MongoDB to Oracle](mgdb_ora/README.md)~~ WIP
+
+
+
+    
